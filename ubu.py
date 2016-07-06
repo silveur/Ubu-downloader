@@ -19,16 +19,22 @@ for artist in artists:
 		link = link['href'].encode('utf8')
 		folder = artist.string.encode('utf8')
 		index = link.rfind('/')
-		trackName = link[index:]
-		fullPath = './' + folder + trackName
+		trackName = link[index+1:]
+		fullPath = './' + folder + '/' + trackName
 		rq = urllib2.Request(link)
-		res = urllib2.urlopen(rq)
-		if res.code == 200:
-			if not os.path.exists(folder):
-			    os.makedirs(folder)
-			track = open( fullPath, 'wb')
-			track.write(res.read())
-			track.close()
-			print 'Downloaded: ' + fullPath
-		elif res.code == 404:
-			print 'Not found: ' + fullPath
+		try:
+			res = urllib2.urlopen(rq)
+		except urllib2.HTTPError as e:
+			print 'Request error: ' + link
+		except urllib2.URLError as e:
+			print 'URL error: ' + link
+		else:
+			if not os.path.isfile(fullPath):
+				if not os.path.exists(folder):
+				    os.makedirs(folder)
+				track = open( fullPath, 'wb')
+				track.write(res.read())
+				track.close()
+				print 'Downloaded: ' + trackName
+			else:
+				print 'Exist already: ' + trackName
