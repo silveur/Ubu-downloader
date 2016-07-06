@@ -21,20 +21,21 @@ for artist in artists:
 		index = link.rfind('/')
 		trackName = link[index+1:]
 		fullPath = './' + folder + '/' + trackName
-		rq = urllib2.Request(link)
-		try:
-			res = urllib2.urlopen(rq)
-		except urllib2.HTTPError as e:
-			print 'Request error: ' + link
-		except urllib2.URLError as e:
-			print 'URL error: ' + link
-		else:
-			if not os.path.isfile(fullPath):
+		if not os.path.isfile(fullPath):
+			print 'Downloading: ' + trackName
+			rq = urllib2.Request(link)
+			try:
+				res = urllib2.urlopen(rq)
+			except urllib2.HTTPError as e:
+				print 'Request error: ' + link
+			except urllib2.URLError as e:
+				print 'URL error: ' + link
+			else:
 				if not os.path.exists(folder):
 				    os.makedirs(folder)
 				track = open( fullPath, 'wb')
 				track.write(res.read())
 				track.close()
-				print 'Downloaded: ' + trackName
-			else:
-				print 'Exist already: ' + trackName
+				
+		else:
+			print 'Exist already: ' + trackName
