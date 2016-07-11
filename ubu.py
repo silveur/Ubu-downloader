@@ -22,15 +22,15 @@ for artist in artists:
 		trackName = link[index+1:]
 		fullPath = './' + folder + '/' + trackName
 		if not os.path.isfile(fullPath):
-			print 'Downloading: ' + trackName
 			rq = urllib2.Request(link)
 			try:
 				res = urllib2.urlopen(rq)
 			except urllib2.HTTPError as e:
-				print 'Request error: ' + link
+				print 'Request error: ' + e.reason
 			except urllib2.URLError as e:
-				print 'URL error: ' + link
+				print 'URL error: ' + e.reason
 			else:
+				print 'Downloading: ' + trackName
 				if not os.path.exists(folder):
 				    os.makedirs(folder)
 				track = open( fullPath, 'wb')
